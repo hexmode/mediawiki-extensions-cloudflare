@@ -55,6 +55,13 @@ $wgCloudflareAPIKey = '';
 `$wgCloudflarePurgePage`を有効化する場合 ページルール (Page Rule) に　Bypass Cache on Cookie　を設定する必要があります。
 (BusinessプランとEnterpriseプランのみ有効です。)
 
+この機能は推奨しません。Cloudflare は通常、MediaWiki の記事 HTML を既定ではキャッシュしません。記事ページを Cloudflare でキャッシュするには Cache Rules などで明示的にキャッシュ対象にする必要がありますが、その場合、MediaWiki が管理する CDN purge 経路の外で URL や cache key が増える可能性があります。
+
+MediaWiki では同じ記事が短縮 URL、`index.php?title=...` 形式、モバイル表示、リダイレクト、クエリ文字列付き URL など複数の形式で配信されることがあります。この拡張は、それらの記事 URL を完全に列挙して purge することを保証できません。そのため、Cloudflare 側に古い記事キャッシュが残る可能性があります。
+
+安定性を重視する場合は `$wgCloudflarePurgePage` を無効のままにし、Cloudflare での purge 対象はファイル（画像・サムネイル）に限定する構成を推奨します。記事ページのキャッシュは、MediaWiki の CDN purge 経路と親和性の高い Varnish などで扱うことをおすすめします。
+
+
 ## 問題
 
 - API Rate limits
